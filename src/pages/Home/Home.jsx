@@ -11,8 +11,8 @@ export default function Home(props) {
 		if (
 			!fileName ||
 			!fileBody ||
-			fileName.length() === 0 ||
-			fileBody.length() === 0
+			fileName.length === 0 ||
+			fileBody.length === 0
 		)
 			return;
 		setLink("LOADING YOUR LINK");
