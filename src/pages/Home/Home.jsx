@@ -28,7 +28,7 @@ export default function Home(props) {
 				placeholder="Enter file name with extenion"
 			/>
 			<textarea
-				rows={15}
+				rows={25}
 				ref={fileData}
 				placeholder="Enter file content"
 			></textarea>
