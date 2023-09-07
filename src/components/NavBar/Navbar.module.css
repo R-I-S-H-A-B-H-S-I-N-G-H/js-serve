@@ -1,0 +1,17 @@
+.container {
+	background: lightcoral;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 1rem;
+}
+
+.titleContainer {
+	font-size: 3rem;
+	font-weight: bold;
+}
+
+.titleContainer:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}

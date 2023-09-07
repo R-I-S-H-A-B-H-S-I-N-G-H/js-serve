@@ -1,0 +1,33 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: lightcoral;
+	height: 100vh;
+}
+
+.container > textarea {
+	margin: 0.5rem;
+	border-radius: 0.2rem;
+	text-align: center;
+	padding: 1rem;
+	min-width: 75%;
+}
+
+.linkContainer {
+	margin: 0.5rem;
+	border-radius: 0.2rem;
+	text-align: center;
+	min-width: 75%;
+	padding: 0.7rem;
+	border: none;
+}
+
+/* .container > input {
+	margin: 0.5rem;
+	border-radius: 0.2rem;
+	text-align: center;
+	padding: 1rem;
+	min-width: 75%;
+} */
