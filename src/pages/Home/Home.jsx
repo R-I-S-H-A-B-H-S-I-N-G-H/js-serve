@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { upload } from "../../Utils/JsServeApi";
 import style from "./Home.module.css";
+import { LoadingButton } from "@mui/lab";
 
 export default function Home(props) {
 	const [link, setLink] = useState(null);
+	const [loading, setLoading] = useState(false);
 	const fileName = useRef();
 	const fileData = useRef();
 
 	async function uploadFile(fileName, fileBody) {
+		setLoading(false);
 		if (
 			!fileName ||
 			!fileBody ||
@@ -16,8 +19,10 @@ export default function Home(props) {
 		)
 			return;
 		setLink("LOADING YOUR LINK");
+		setLoading(true);
 		const { url } = await upload({ fileName, fileBody });
 		setLink(url);
+		setLoading(false);
 	}
 
 	return (
@@ -34,13 +39,15 @@ export default function Home(props) {
 			></textarea>
 
 			<input className={style.linkContainer} value={link} readOnly={true} />
-			<button
+			<LoadingButton
+				variant="outlined"
+				loading={loading}
 				onClick={() =>
 					uploadFile(fileName.current.value, fileData.current.value)
 				}
 			>
 				Create Link
-			</button>
+			</LoadingButton>
 		</div>
 	);
 }
