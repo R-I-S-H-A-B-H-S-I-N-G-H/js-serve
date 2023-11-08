@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "https://js-serve.cyclic.cloud";
+// const BASE_URL = "https://js-serve.cyclic.cloud";
+const BASE_URL = "https://jsserve.onrender.com";
 
 export async function upload(props) {
 	const { fileBody, fileName } = props;
