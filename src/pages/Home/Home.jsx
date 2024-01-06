@@ -10,13 +10,25 @@ export default function Home(props) {
 	const fileNameRef = useRef();
 	const fileDataRef = useRef();
 	const [filename, setFileName] = useState("");
+	const [fileData, setFileData] = useState("");
 	const debounceSearch = useDebounce(filename);
+	const debounceData = useDebounce(fileData);
 
 	useEffect(() => {
+		if (fileData) return;
 		get(debounceSearch).then((res) => {
-			if (fileDataRef.current) fileDataRef.current.value = res;
+			// if (fileDataRef.current)
+			// fileDataRef.current.value = res;
+			setFileData(res);
+			fileDataRef.current.readOnly = false;
 		});
 	}, [debounceSearch]);
+
+	useEffect(() => {
+		console.log(debounceData, debounceSearch);
+		if (!debounceData || !debounceSearch) return;
+		uploadFile(debounceSearch, debounceData);
+	}, [debounceData]);
 
 	async function uploadFile(fileName, fileBody) {
 		setLoading(false);
@@ -33,25 +45,38 @@ export default function Home(props) {
 		setLink(url);
 		setLoading(false);
 	}
+
 	function onFileNameChange(e) {
 		setFileName(e.target.value);
 	}
+
+	function onFileDataChange(e) {
+		setFileData(e.target.value);
+	}
+
 	return (
 		<div className={style.container}>
 			<input
 				onChange={onFileNameChange}
-				className={style.linkContainer}
+				className={style.nameContainer}
 				ref={fileNameRef}
 				placeholder="Enter file name with extenion"
 			/>
 			<textarea
+				onChange={onFileDataChange}
+				readOnly={true}
 				rows={25}
 				ref={fileDataRef}
 				placeholder="Enter file content"
+				value={fileData}
 			></textarea>
 
-			<input className={style.linkContainer} value={link} readOnly={true} />
-			<LoadingButton
+			<input
+				className={style.linkContainer}
+				value={loading ? "Loading..." : link}
+				readOnly={true}
+			/>
+			{/* <LoadingButton
 				variant="outlined"
 				loading={loading}
 				onClick={() =>
@@ -59,7 +84,7 @@ export default function Home(props) {
 				}
 			>
 				Create Link
-			</LoadingButton>
+			</LoadingButton> */}
 		</div>
 	);
 }

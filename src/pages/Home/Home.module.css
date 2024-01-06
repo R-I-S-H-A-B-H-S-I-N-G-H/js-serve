@@ -15,6 +15,19 @@
 	min-width: 75%;
 }
 
+.nameContainer {
+	margin: 0.5rem;
+	border-radius: 0.2rem;
+	text-align: center;
+	min-width: 75%;
+	min-height: 3%;
+	padding: 0.7rem;
+	border: none;
+	font-size: large;
+	font-weight: bold;
+	background: white;
+}
+
 .linkContainer {
 	margin: 0.5rem;
 	border-radius: 0.2rem;
@@ -26,6 +39,10 @@
 	font-size: large;
 	font-weight: bold;
 	background: white;
+
+	border-style: dotted;
+	cursor: not-allowed;
+	color: #777;
 }
 
 /* .container > input {
