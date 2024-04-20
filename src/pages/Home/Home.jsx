@@ -25,8 +25,8 @@ export default function Home(props) {
 		return `${fileName}.${extenion}`;
 	}
 
-	function updateFileNameFromLocation(_filename = "") {
-		const fileArr = _filename.split(".");
+	function updateFileNameFromLocation(fileNameWithExt = "") {
+		const fileArr = fileNameWithExt.split(".");
 		const filename = fileArr[0] || "";
 		const fileExt = fileArr[1] || "";
 		const searchParam = searchParams;
@@ -35,6 +35,7 @@ export default function Home(props) {
 		searchParam.set("ext", fileExt);
 
 		setSearchParams(searchParam.toString());
+		setFileExtension(getLanguageFromFileName(fileNameWithExt));
 		// history.replace({ pathname: location.pathname, search: searchParam.toString() });
 	}
 
@@ -74,14 +75,17 @@ export default function Home(props) {
 		await uploadFile(debounceSearch, debounceFileData);
 	}
 
-	function onFileNameChangeHandler(e) {
-		const val = e.target.value;
-		const fileNameArr = val?.split(".") || [];
+	function getLanguageFromFileName(filenameWithExt) {
+		const fileNameArr = filenameWithExt?.split(".") || [];
 		const extension = fileNameArr.pop() || "";
-		const fileLangName = extensionToName(`.${extension}`);
+		return extensionToName(`.${extension}`);
+	}
 
-		setFileExtension(fileLangName);
-		setFileName(val);
+	function onFileNameChangeHandler(e) {
+		const fileNameWithExt = e.target.value;
+
+		setFileExtension(getLanguageFromFileName(fileNameWithExt));
+		setFileName(fileNameWithExt);
 	}
 
 	function onFileDataChangeHandler(e) {
