@@ -39,7 +39,8 @@ export default function Home(props) {
 
 	async function onDebounceFileNameUpdate() {
 		setLoading(true);
-		const res = await getFile(debounceSearch);
+		let res = await getFile(debounceSearch);
+		if (res && typeof res != "string") res = JSON.stringify(res);
 		setFileData(res);
 		setLink(getFileUrl(debounceSearch));
 		setLoading(false);
