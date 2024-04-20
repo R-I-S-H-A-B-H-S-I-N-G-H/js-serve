@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { get, upload } from "../../Utils/JsServeApi";
 import style from "./Home.module.css";
-import { LoadingButton } from "@mui/lab";
 import { useDebounce } from "../../customHooks/hooks";
+import { Editor } from "@monaco-editor/react";
 
 export default function Home(props) {
 	const [link, setLink] = useState(null);
@@ -25,20 +25,13 @@ export default function Home(props) {
 	}, [debounceSearch]);
 
 	useEffect(() => {
-		console.log(debounceData, debounceSearch);
 		if (!debounceData || !debounceSearch) return;
 		uploadFile(debounceSearch, debounceData);
 	}, [debounceData]);
 
 	async function uploadFile(fileName, fileBody) {
 		setLoading(false);
-		if (
-			!fileName ||
-			!fileBody ||
-			fileName.length === 0 ||
-			fileBody.length === 0
-		)
-			return;
+		if (!fileName || !fileBody || fileName.length === 0 || fileBody.length === 0) return;
 		setLink("LOADING YOUR LINK");
 		setLoading(true);
 		const { url } = await upload({ fileName, fileBody });
@@ -51,31 +44,19 @@ export default function Home(props) {
 	}
 
 	function onFileDataChange(e) {
-		setFileData(e.target.value);
+		const val = e;
+		setFileData(val);
 	}
 
 	return (
 		<div className={style.container}>
-			<input
-				onChange={onFileNameChange}
-				className={style.nameContainer}
-				ref={fileNameRef}
-				placeholder="Enter file name with extenion"
-			/>
-			<textarea
-				onChange={onFileDataChange}
-				readOnly={true}
-				rows={25}
-				ref={fileDataRef}
-				placeholder="Enter file content"
-				value={fileData}
-			></textarea>
+			<input onChange={onFileNameChange} className={style.nameContainer} ref={fileNameRef} placeholder="Enter file name with extenion" />
+			{/* <textarea onChange={onFileDataChange} readOnly={true} rows={25} ref={fileDataRef} placeholder="Enter file content" value={fileData}></textarea> */}
 
-			<input
-				className={style.linkContainer}
-				value={loading ? "Loading..." : link}
-				readOnly={true}
-			/>
+			<div className={style.codeArea}>
+				<Editor onChange={onFileDataChange} ref={fileDataRef} defaultLanguage="html" defaultValue="//Enter file name with extenion" value={fileData} />
+			</div>
+			<input className={style.linkContainer} value={loading ? "Loading..." : link} readOnly={true} />
 			{/* <LoadingButton
 				variant="outlined"
 				loading={loading}
