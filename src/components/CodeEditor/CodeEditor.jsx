@@ -2,7 +2,7 @@ import { Editor } from "@monaco-editor/react";
 import { useEffect, useState } from "react";
 
 const CodeEditor = (props) => {
-	const { onChange, defaultLanguage, defaultValue = "//Enter file name with extension", value } = props;
+	const { onChange, defaultLanguage, defaultValue = "//Enter file content", value } = props;
 	const [language, setLanguage] = useState(defaultLanguage?.toLowerCase());
 
 	// Handle language change
