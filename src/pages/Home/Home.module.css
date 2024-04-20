@@ -8,16 +8,16 @@
 }
 
 .codeArea {
-	margin: 0.5rem;
+	/* margin: 0.5rem; */
 	border-radius: 0.4rem;
 	text-align: center;
 	padding: 1rem;
 	min-width: 75%;
-	min-height: 75%;
+	min-height: 65%;
 }
 
 .nameContainer {
-	margin: 0.5rem;
+	/* margin: 0.5rem; */
 	border-radius: 0.2rem;
 	text-align: center;
 	min-width: 75%;
@@ -30,7 +30,7 @@
 }
 
 .linkContainer {
-	margin: 0.5rem;
+	/* margin: 0.5rem; */
 	border-radius: 0.2rem;
 	text-align: center;
 	min-width: 75%;

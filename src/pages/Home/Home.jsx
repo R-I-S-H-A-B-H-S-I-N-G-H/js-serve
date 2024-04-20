@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { get, upload } from "../../Utils/JsServeApi";
 import style from "./Home.module.css";
 import { useDebounce } from "../../customHooks/hooks";
-import { Editor } from "@monaco-editor/react";
+import CodeEditor from "../../components/CodeEditor/CodeEditor";
+import { extensionToName } from "../../Utils/LanguageUtil";
 
 export default function Home(props) {
 	const [link, setLink] = useState(null);
@@ -13,12 +14,11 @@ export default function Home(props) {
 	const [fileData, setFileData] = useState("");
 	const debounceSearch = useDebounce(filename);
 	const debounceData = useDebounce(fileData);
+	const [fileExtension, setFileExtension] = useState("");
 
 	useEffect(() => {
 		if (fileData) return;
 		get(debounceSearch).then((res) => {
-			// if (fileDataRef.current)
-			// fileDataRef.current.value = res;
 			setFileData(res);
 			fileDataRef.current.readOnly = false;
 		});
@@ -40,7 +40,11 @@ export default function Home(props) {
 	}
 
 	function onFileNameChange(e) {
-		setFileName(e.target.value);
+		const val = e.target.value;
+		const extenion = val?.split(".").pop() || "";
+		const fileLangName = extensionToName("." + extenion);
+		setFileExtension(fileLangName);
+		setFileName(val);
 	}
 
 	function onFileDataChange(e) {
@@ -51,10 +55,9 @@ export default function Home(props) {
 	return (
 		<div className={style.container}>
 			<input onChange={onFileNameChange} className={style.nameContainer} ref={fileNameRef} placeholder="Enter file name with extenion" />
-			{/* <textarea onChange={onFileDataChange} readOnly={true} rows={25} ref={fileDataRef} placeholder="Enter file content" value={fileData}></textarea> */}
 
 			<div className={style.codeArea}>
-				<Editor onChange={onFileDataChange} ref={fileDataRef} defaultLanguage="html" defaultValue="//Enter file name with extenion" value={fileData} />
+				<CodeEditor onChange={onFileDataChange} ref={fileDataRef} defaultLanguage={fileExtension} value={fileData} />
 			</div>
 			<input className={style.linkContainer} value={loading ? "Loading..." : link} readOnly={true} />
 			{/* <LoadingButton
