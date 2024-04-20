@@ -11,4 +11,17 @@ Js Serve is a utility application designed to facilitate the instant hosting of 
 - **User-Friendly Interface:** Simple and intuitive interface makes it easy for users of all levels to upload and host files.
 
 
+## Try it out
+Check out the live demo: [Js Serve Live Demo](https://jsserve.pages.dev/)
 
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+Contributions are welcome! Feel free to open an issue or submit a pull request.
+
+## Support
+For any questions, issues, or feedback, please [contact us](mailto:your_email@example.com).
+
+---
+© 2024 Js Serve. All rights reserved.
