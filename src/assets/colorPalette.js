@@ -1,0 +1,6 @@
+export const COLOR_PALLET = {
+	PRIMARY: "#222831",
+	SECONDARY: "#31363F",
+	TERNARY: "#76ABAE",
+	LEAST: "#EEEEEE",
+};
