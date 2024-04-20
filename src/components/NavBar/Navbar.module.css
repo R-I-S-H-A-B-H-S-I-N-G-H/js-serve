@@ -1,5 +1,6 @@
 .container {
-	background: lightcoral;
+	font-family: "Roboto", sans-serif;
+	background: #222831;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -7,6 +8,7 @@
 }
 
 .titleContainer {
+	color: #76abae;
 	font-size: 2rem;
 	font-weight: bold;
 }

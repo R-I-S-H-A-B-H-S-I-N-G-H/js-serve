@@ -20,6 +20,7 @@ export async function upload(props) {
 }
 
 export function getFileUrl(fileName) {
+	if (!fileName) return null;
 	return `${BASE_CDN_URL}/${fileName}`;
 }
 

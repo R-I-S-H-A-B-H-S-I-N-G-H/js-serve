@@ -39,12 +39,10 @@ export default function Home(props) {
 
 	async function onDebounceFileNameUpdate() {
 		setLoading(true);
-		getFile(debounceSearch).then((res) => {
-			if (res == null) return;
-			setFileData(res);
-			setLink(getFileUrl(debounceSearch));
-			setLoading(false);
-		});
+		const res = await getFile(debounceSearch);
+		setFileData(res);
+		setLink(getFileUrl(debounceSearch));
+		setLoading(false);
 	}
 
 	async function onDebounceFileDataUpdate() {
