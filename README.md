@@ -1,8 +1,14 @@
-# React + Vite
+# Js Serve
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+Js Serve is a utility application designed to facilitate the instant hosting of any type of file to an Amazon S3 bucket. With this tool, you can quickly and easily deploy files to your S3 bucket, making them accessible over the internet with minimal effort.
 
-Currently, two official plugins are available:
+## Features
+- **Instant Hosting:** Upload files to your S3 bucket for instant hosting without the need for complex configurations.
+- **File Compatibility:** Host any type of file, including HTML, CSS, JavaScript, images, documents, and more.
+- **Effortless Deployment:** Streamlined process for deploying files, saving you time and hassle.
+- **Amazon S3 Integration:** Utilizes the power and scalability of Amazon S3 for reliable hosting and storage.
+- **User-Friendly Interface:** Simple and intuitive interface makes it easy for users of all levels to upload and host files.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+
