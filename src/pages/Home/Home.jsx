@@ -103,7 +103,7 @@ export default function Home(props) {
 			<div className={style.linkContainer}>
 				<input value={loading ? "Loading..." : link || "..."} readOnly={true} />
 				<div className={style.loadingIcon}>
-					<Icon enabled={uploadingStatus} />
+					<Icon enabled={uploadingStatus || loading} />
 				</div>
 			</div>
 		</div>
