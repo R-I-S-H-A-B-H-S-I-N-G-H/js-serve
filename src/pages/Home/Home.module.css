@@ -34,8 +34,7 @@
 	border-radius: 0.2rem;
 	text-align: center;
 	min-width: 75%;
-	min-height: 3%;
-	padding: 0.7rem;
+	min-height: 6%;
 	border: none;
 	font-size: large;
 	font-weight: bold;
@@ -44,12 +43,23 @@
 	border-style: dotted;
 	cursor: not-allowed;
 	color: #777;
+	position: relative;
 }
-
-/* .container > input {
-	margin: 0.5rem;
+.linkContainer input {
+	height: 100%;
+	width: 100%;
 	border-radius: 0.2rem;
 	text-align: center;
-	padding: 1rem;
-	min-width: 75%;
-} */
+	border: none;
+	font-size: large;
+	font-weight: bold;
+	background: white;
+	cursor: not-allowed;
+}
+.loadingIcon {
+	position: absolute;
+	top: 20%;
+	right: 0%;
+	height: 60%;
+	width: 50px;
+}

@@ -19,6 +19,10 @@ export async function upload(props) {
 	}
 }
 
+export function getFileUrl(fileName) {
+	return `${BASE_CDN_URL}/${fileName}`;
+}
+
 export async function get(fileName) {
 	try {
 		const url = BASE_CDN_URL + `/${fileName}`;

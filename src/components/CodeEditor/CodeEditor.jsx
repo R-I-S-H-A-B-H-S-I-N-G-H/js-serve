@@ -1,6 +1,5 @@
 import { Editor } from "@monaco-editor/react";
-import { useEffect, useRef, useState } from "react";
-import { LanguageListMap } from "../../Utils/LanguageMap";
+import { useEffect, useState } from "react";
 
 const CodeEditor = (props) => {
 	const { onChange, defaultLanguage, defaultValue = "//Enter file name with extension", value } = props;
@@ -13,7 +12,20 @@ const CodeEditor = (props) => {
 		}
 	}, [defaultLanguage]);
 
-	return <Editor theme="vs-dark" onChange={onChange} language={language} defaultValue={defaultValue} value={value} />;
+	return (
+		<Editor
+			options={{
+				minimap: {
+					enabled: false,
+				},
+			}}
+			theme="vs-dark"
+			onChange={onChange}
+			language={language}
+			defaultValue={defaultValue}
+			value={value}
+		/>
+	);
 };
 
 export default CodeEditor;
