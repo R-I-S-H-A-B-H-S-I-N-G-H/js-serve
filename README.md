@@ -21,7 +21,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Contributions are welcome! Feel free to open an issue or submit a pull request.
 
 ## Support
-For any questions, issues, or feedback, please [contact us](mailto:your_email@example.com).
+For any questions, issues, or feedback, please [contact us](mailto:rishabhsingh2305@gmail.com).
 
 ---
 © 2024 Js Serve. All rights reserved.
