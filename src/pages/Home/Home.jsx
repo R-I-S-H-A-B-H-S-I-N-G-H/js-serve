@@ -1,21 +1,44 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { get, upload, getFileUrl } from "../../Utils/JsServeApi";
 import style from "./Home.module.css";
 import { useDebounce } from "../../customHooks/hooks";
 import CodeEditor from "../../components/CodeEditor/CodeEditor";
 import { extensionToName } from "../../Utils/LanguageUtil";
 import Icon from "../../components/Icon/Icon";
+import { useSearchParams } from "react-router-dom";
 
 export default function Home(props) {
+	const [searchParams, setSearchParams] = useSearchParams();
 	const [link, setLink] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [uploadingStatus, setUploadingStatus] = useState(false);
-	const fileNameRef = useRef();
-	const [filename, setFileName] = useState("");
+	const [fileName, setFileName] = useState(getFileNameFromLocation());
 	const [fileData, setFileData] = useState("");
-	const debounceSearch = useDebounce(filename);
+	const debounceSearch = useDebounce(fileName);
 	const debounceFileData = useDebounce(fileData);
 	const [fileExtension, setFileExtension] = useState("");
+
+	function getFileNameFromLocation() {
+		const extenion = searchParams.get("ext") || "";
+		const fileName = searchParams.get("file") || "";
+		if (!fileName) return "";
+		return `${fileName}.${extenion}`;
+	}
+
+	function updateFileNameFromLocation(_filename = "") {
+		const fileArr = _filename.split(".");
+		const filename = fileArr[0] || "";
+		const fileExt = fileArr[1] || "";
+		const searchParam = searchParams;
+
+		searchParam.set("file", filename);
+		searchParam.set("ext", fileExt);
+
+		setSearchParams(searchParam.toString());
+		// history.replace({ pathname: location.pathname, search: searchParam.toString() });
+	}
+
+	getFileNameFromLocation();
 
 	useEffect(() => {
 		onDebounceFileNameUpdate();
@@ -38,6 +61,7 @@ export default function Home(props) {
 	}
 
 	async function onDebounceFileNameUpdate() {
+		updateFileNameFromLocation(debounceSearch);
 		setLoading(true);
 		let res = await getFile(debounceSearch);
 		if (res && typeof res != "string") res = JSON.stringify(res);
@@ -52,8 +76,10 @@ export default function Home(props) {
 
 	function onFileNameChangeHandler(e) {
 		const val = e.target.value;
-		const extension = val?.split(".").pop() || "";
+		const fileNameArr = val?.split(".") || [];
+		const extension = fileNameArr.pop() || "";
 		const fileLangName = extensionToName(`.${extension}`);
+
 		setFileExtension(fileLangName);
 		setFileName(val);
 	}
@@ -65,7 +91,7 @@ export default function Home(props) {
 
 	return (
 		<div className={style.container}>
-			<input onChange={onFileNameChangeHandler} className={style.nameContainer} ref={fileNameRef} placeholder="Enter file name with extenion" />
+			<input value={fileName} onChange={onFileNameChangeHandler} className={style.nameContainer} placeholder="Enter file name with extenion" />
 
 			<div className={style.codeArea}>
 				<CodeEditor onChange={onFileDataChangeHandler} defaultLanguage={fileExtension} value={fileData} />
