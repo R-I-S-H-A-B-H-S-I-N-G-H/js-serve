@@ -65,7 +65,7 @@ export default function Home(props) {
 		updateFileNameFromLocation(debounceSearch);
 		setLoading(true);
 		let res = await getFile(debounceSearch);
-		if (res && typeof res != "string") res = JSON.stringify(res);
+		if (res && typeof res != "string") res = JSON.stringify(res, null, 4);
 		setFileData(res);
 		setLink(getFileUrl(debounceSearch));
 		setLoading(false);
