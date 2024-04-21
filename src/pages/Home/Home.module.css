@@ -45,19 +45,23 @@
 	cursor: not-allowed;
 	position: relative;
 }
-.linkContainer input {
-	color: #eeeeee;
+.linkContainer {
+	input {
+		color: #76abae;
 
-	height: 100%;
-	width: 100%;
-	border-radius: 0.2rem;
-	text-align: center;
-	border: none;
-	font-size: large;
-	font-weight: bold;
-	background: #31363f;
-	cursor: not-allowed;
+		height: 100%;
+		width: 100%;
+		border-radius: 0.2rem;
+		text-align: center;
+		border: none;
+		font-size: large;
+		font-weight: bold;
+		background: #31363f;
+		cursor: pointer;
+		text-decoration: underline;
+	}
 }
+
 .loadingIcon {
 	scale: calc(1.3);
 	position: absolute;

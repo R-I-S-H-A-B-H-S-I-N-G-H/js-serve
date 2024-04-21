@@ -93,6 +93,10 @@ export default function Home(props) {
 		setFileData(val);
 	}
 
+	function goToPage(link) {
+		window.open(link, "_blank");
+	}
+
 	return (
 		<div className={style.container}>
 			<input value={fileName} onChange={onFileNameChangeHandler} className={style.nameContainer} placeholder="Enter file name with extenion" />
@@ -101,7 +105,7 @@ export default function Home(props) {
 				<CodeEditor onChange={onFileDataChangeHandler} defaultLanguage={fileExtension} value={fileData} />
 			</div>
 			<div className={style.linkContainer}>
-				<input value={loading ? "Loading..." : link || "..."} readOnly={true} />
+				<input onClick={() => loading || goToPage(link)} value={loading ? "Loading..." : link || "..."} readOnly={true} />
 				<div className={style.loadingIcon}>
 					<Icon enabled={uploadingStatus || loading} />
 				</div>
