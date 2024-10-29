@@ -1,27 +1,36 @@
-# Js Serve
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Description
-Js Serve is a utility application designed to facilitate the instant hosting of any type of file to an Amazon S3 bucket. With this tool, you can quickly and easily deploy files to your S3 bucket, making them accessible over the internet with minimal effort.
+## Getting Started
 
-## Features
-- **Instant Hosting:** Upload files to your S3 bucket for instant hosting without the need for complex configurations.
-- **File Compatibility:** Host any type of file, including HTML, CSS, JavaScript, images, documents, and more.
-- **Effortless Deployment:** Streamlined process for deploying files, saving you time and hassle.
-- **Amazon S3 Integration:** Utilizes the power and scalability of Amazon S3 for reliable hosting and storage.
-- **User-Friendly Interface:** Simple and intuitive interface makes it easy for users of all levels to upload and host files.
+First, run the development server:
 
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## Try it out
-Check out the live demo: [Js Serve Live Demo](https://jsserve.pages.dev/)
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Contributing
-Contributions are welcome! Feel free to open an issue or submit a pull request.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Support
-For any questions, issues, or feedback, please [contact us](mailto:rishabhsingh2305@gmail.com).
+## Learn More
 
----
-© 2024 Js Serve. All rights reserved.
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
