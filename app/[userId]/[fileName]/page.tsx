@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import CodeEditor from "@/components/code-editor/code-editor";
 import SideBarComponent from "@/components/sidebar/sidebar";
@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { getFileData, getFileUrl, upload } from "@/utils/api-utils/s3util";
-import { generateUUID } from "@/utils/uuid";
 import { toast, Toaster } from "sonner";
 import { useRouter } from "next/navigation";
 import { useDebounce } from "use-debounce";
