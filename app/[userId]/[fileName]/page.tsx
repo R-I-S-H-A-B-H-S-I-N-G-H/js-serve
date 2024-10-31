@@ -6,12 +6,15 @@ import SideBarComponent from "@/components/sidebar/sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar";
 import { getFileData, getFileUrl, upload } from "@/utils/api-utils/s3util";
 import { toast, Toaster } from "sonner";
 import { useRouter } from "next/navigation";
 import { useDebounce } from "use-debounce";
 import { fromExtension } from "@/utils/language-util";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getUserId } from "@/utils/userUtil";
 
 export default function FilePage() {
 	const router = useRouter();
@@ -26,8 +29,12 @@ export default function FilePage() {
 		fileBody: "",
 	});
 
+	const [indexData, setIndexData] = useState<{ fileList: Array<string> } | null>(null);
+
 	const [debouncedFileName] = useDebounce(servePayload.fileName, 1000);
 	const language = fromExtension(`.${pathFileName.split(".")[1]}`);
+
+	if (getUserId() != userId) goTo(getUserId(), "hello.txt", true);
 
 	useEffect(() => {
 		populateUserIdAndFileName();
@@ -57,6 +64,13 @@ export default function FilePage() {
 		} catch (error: any) {
 			toast.error(error.message);
 		}
+
+		try {
+			const indexData = await getFileData(`${userId}.json`);
+			setIndexData(indexData);
+		} catch (error) {
+			await upload({ fileName: `${userId}.json`, fileBody: JSON.stringify({}) });
+		}
 	}
 
 	function updateServePayloadBody(updatedBody: string) {
@@ -81,8 +95,21 @@ export default function FilePage() {
 			if (!servePayload.fileBody) throw Error("No file body");
 			await upload({ fileName: `${userId}/${servePayload.fileName}`, fileBody: servePayload.fileBody });
 			toast.success("Uploaded successfully");
+			addFileToIndexData(servePayload.fileName);
 		} catch (error: any) {
 			toast.error(error.message);
+		}
+	}
+
+	async function addFileToIndexData(filename: string) {
+		const newIndexData = indexData;
+		newIndexData?.fileList.push(filename);
+		try {
+			await upload({ fileName: `${userId}.json`, fileBody: JSON.stringify(newIndexData) });
+			setIndexData({ ...newIndexData });
+			toast.success("Updated Index");
+		} catch (error) {
+			toast.warning("Failed to update Index");
 		}
 	}
 
@@ -110,7 +137,27 @@ export default function FilePage() {
 	return (
 		<>
 			<Toaster />
-			<SideBarComponent></SideBarComponent>
+			<SideBarComponent>
+				{indexData ? (
+					indexData.fileList.map((filename) => (
+						<SidebarMenuItem key={filename}>
+							<SidebarMenuButton asChild>
+								<a href={`/${userId}/${filename}`}>
+									<span>{filename}</span>
+								</a>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+					))
+				) : (
+					<>
+						<Skeleton className="h-6 p-2" />
+						<Skeleton className="h-8 p-2" />
+						<Skeleton className="h-4 p-2" />
+						<Skeleton className="h-4 p-2" />
+						<Skeleton className="h-6 p-2" />
+					</>
+				)}
+			</SideBarComponent>
 			<SidebarTrigger />
 
 			<div className="w-full flex flex-col gap-2 p-2">
