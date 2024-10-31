@@ -16,10 +16,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUserId } from "@/utils/userUtil";
 import { getSizeInBytes } from "@/utils/util";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useTheme } from "next-themes";
 
 export default function FilePage() {
 	const router = useRouter();
 	const pathname = usePathname();
+	const { theme, setTheme } = useTheme();
 
 	const [pathUserId, pathFileName] = pathname.split("/").filter((ele) => ele);
 
@@ -185,7 +188,10 @@ export default function FilePage() {
 
 			<div className="w-full flex justify-center">
 				<div className="w-[90%] flex flex-col gap-2 p-2 m-2">
-					<div className="font-extrabold text-3xl text-blue-600">JS Serve</div>
+					<div className="flex  justify-between">
+						<div className="font-extrabold text-3xl text-blue-600">JS Serve</div>
+						<ThemeToggle />
+					</div>
 					<div className="flex gap-2">
 						<div className="flex flex-grow">
 							{/* <Input className="w-12 min-w-12 text-right " disabled value={(userId ?? "...") + " / "} /> */}
@@ -205,7 +211,7 @@ export default function FilePage() {
 					</div>
 
 					<div className="flex-grow">
-						<CodeEditor onChange={updateServePayloadBody} value={servePayload.fileBody} language={language} />
+						<CodeEditor theme={theme} onChange={updateServePayloadBody} value={servePayload.fileBody} language={language} />
 					</div>
 				</div>
 			</div>
