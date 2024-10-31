@@ -147,7 +147,6 @@ export default function FilePage() {
 		return Object.keys(indexData).map((key) => {
 			return { ...indexData[key] };
 		});
-		// return [];
 	}
 
 	return (
@@ -161,14 +160,16 @@ export default function FilePage() {
 						return (
 							<SidebarMenuItem key={name}>
 								<SidebarMenuButton asChild>
-									<a href={`/${userId}/${name}`}>
-										<div className="font-bold">{name}</div>
+									<a className="h-20" href={`/${userId}/${name}`}>
+										<div className="flex flex-col gap-1">
+											<div className="font-bold">{name}</div>
 
-										<div>|</div>
-										<div className="font-light text-xs">{(size / 1024).toFixed(2)} kb</div>
-
-										<div>|</div>
-										<div className="font-light text-xs">{lastUpdated.toLocaleDateString()} </div>
+											<div className="flex gap-1 text-gray-500">
+												<div className="font-bold text-sm">{(size / 1024).toFixed(2)} kb</div>
+												<div>|</div>
+												<div className="font-bold text-sm">{lastUpdated.toLocaleDateString()} </div>
+											</div>
+										</div>
 									</a>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
@@ -176,11 +177,11 @@ export default function FilePage() {
 					})
 				) : (
 					<>
-						<Skeleton className="h-6 p-2" />
-						<Skeleton className="h-8 p-2" />
-						<Skeleton className="h-4 p-2" />
-						<Skeleton className="h-4 p-2" />
-						<Skeleton className="h-6 p-2" />
+						<Skeleton className="h-20 p-2" />
+						<Skeleton className="h-16 p-2" />
+						<Skeleton className="h-18 p-2" />
+						<Skeleton className="h-20 p-2" />
+						<Skeleton className="h-14 p-2" />
 					</>
 				)}
 			</SideBarComponent>
