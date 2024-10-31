@@ -48,8 +48,6 @@ export default function FilePage() {
 	}, []);
 
 	useEffect(() => {
-		console.log("file name changed to ", debouncedFileName);
-
 		if (userId) {
 			goTo(userId, debouncedFileName, true);
 		}
@@ -74,9 +72,10 @@ export default function FilePage() {
 
 		try {
 			const indexData = await getFileData(`${userId}.json`);
-			setIndexData(indexData);
+			setIndexData({ ...indexData });
 		} catch (error) {
 			await upload({ fileName: `${userId}.json`, fileBody: JSON.stringify({}) });
+			setIndexData((prev) => ({ ...{} }));
 		}
 	}
 
