@@ -15,6 +15,7 @@ import { fromExtension } from "@/utils/language-util";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUserId } from "@/utils/userUtil";
+import { getSizeInBytes } from "@/utils/util";
 
 export default function FilePage() {
 	const router = useRouter();
@@ -29,7 +30,13 @@ export default function FilePage() {
 		fileBody: "",
 	});
 
-	const [indexData, setIndexData] = useState<{ fileList: Array<string> } | null>(null);
+	const [indexData, setIndexData] = useState<{
+		[key: string]: {
+			name: string;
+			size: number;
+			lastUpdated: Date;
+		};
+	} | null>(null);
 
 	const [debouncedFileName] = useDebounce(servePayload.fileName, 1000);
 	const language = fromExtension(`.${pathFileName.split(".")[1]}`);
@@ -95,15 +102,15 @@ export default function FilePage() {
 			if (!servePayload.fileBody) throw Error("No file body");
 			await upload({ fileName: `${userId}/${servePayload.fileName}`, fileBody: servePayload.fileBody });
 			toast.success("Uploaded successfully");
-			addFileToIndexData(servePayload.fileName);
+			addFileToIndexData(servePayload.fileName, getSizeInBytes(servePayload.fileBody));
 		} catch (error: any) {
 			toast.error(error.message);
 		}
 	}
 
-	async function addFileToIndexData(filename: string) {
+	async function addFileToIndexData(filename: string, fileSize: number) {
 		const newIndexData = indexData;
-		newIndexData?.fileList.push(filename);
+		newIndexData[filename] = { name: filename, size: fileSize, lastUpdated: new Date() };
 		try {
 			await upload({ fileName: `${userId}.json`, fileBody: JSON.stringify(newIndexData) });
 			setIndexData({ ...newIndexData });
@@ -134,20 +141,37 @@ export default function FilePage() {
 		}
 	}
 
+	function getIndexDataList() {
+		return Object.keys(indexData).map((key) => {
+			return { ...indexData[key] };
+		});
+		// return [];
+	}
+
 	return (
 		<>
 			<Toaster />
-			<SideBarComponent>
+			<SideBarComponent groupLabel="History">
 				{indexData ? (
-					indexData.fileList.map((filename) => (
-						<SidebarMenuItem key={filename}>
-							<SidebarMenuButton asChild>
-								<a href={`/${userId}/${filename}`}>
-									<span>{filename}</span>
-								</a>
-							</SidebarMenuButton>
-						</SidebarMenuItem>
-					))
+					getIndexDataList().map(({ name, size, lastUpdated: lastUpdatedStr }) => {
+						const lastUpdated = new Date(lastUpdatedStr);
+
+						return (
+							<SidebarMenuItem key={name}>
+								<SidebarMenuButton asChild>
+									<a href={`/${userId}/${name}`}>
+										<div className="font-bold">{name}</div>
+
+										<div>|</div>
+										<div className="font-light text-xs">{(size / 1024).toFixed(2)} kb</div>
+
+										<div>|</div>
+										<div className="font-light text-xs">{lastUpdated.toLocaleDateString()} </div>
+									</a>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						);
+					})
 				) : (
 					<>
 						<Skeleton className="h-6 p-2" />
@@ -160,29 +184,30 @@ export default function FilePage() {
 			</SideBarComponent>
 			<SidebarTrigger />
 
-			<div className="w-full flex flex-col gap-2 p-2">
-				<Label>FileName</Label>
-
-				<div className="flex gap-2">
-					<div className="flex flex-grow">
-						<Input className="w-15 min-w-15 text-right " disabled value={(userId ?? "...") + " / "} />
-						<Input
-							className="flex-grow"
-							onChange={(e) => {
-								updateServePayloadName(e.target.value);
-							}}
-							value={servePayload?.fileName}
-							placeholder="Enter file name"
-						/>
+			<div className="w-full flex justify-center">
+				<div className="w-[90%] flex flex-col gap-2 p-2 m-2">
+					<div className="font-extrabold text-3xl text-blue-600">JS Serve</div>
+					<div className="flex gap-2">
+						<div className="flex flex-grow">
+							{/* <Input className="w-12 min-w-12 text-right " disabled value={(userId ?? "...") + " / "} /> */}
+							<Input
+								className="flex-grow min-w-15 w-15"
+								onChange={(e) => {
+									updateServePayloadName(e.target.value);
+								}}
+								value={servePayload?.fileName}
+								placeholder="Enter file name"
+							/>
+						</div>
+						<Button onClick={upToS3}>Sync</Button>
+						<Button onClick={copyToClipboard} disabled={!servePayload.fileName} variant={"outline"}>
+							Copy
+						</Button>
 					</div>
-					<Button onClick={upToS3}>Sync</Button>
-					<Button onClick={copyToClipboard} disabled={!servePayload.fileName} variant={"outline"}>
-						Copy
-					</Button>
-				</div>
 
-				<div className="flex-grow">
-					<CodeEditor onChange={updateServePayloadBody} value={servePayload.fileBody} language={language} />
+					<div className="flex-grow">
+						<CodeEditor onChange={updateServePayloadBody} value={servePayload.fileBody} language={language} />
+					</div>
 				</div>
 			</div>
 		</>
