@@ -27,6 +27,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
+			<header>
+				<title>JS Serve</title>
+			</header>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased `}>
 				<ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
 					<SidebarProvider>{children}</SidebarProvider>
