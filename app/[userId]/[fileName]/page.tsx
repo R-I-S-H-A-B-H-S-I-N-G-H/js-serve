@@ -160,7 +160,7 @@ export default function FilePage() {
 						return (
 							<SidebarMenuItem key={name}>
 								<SidebarMenuButton asChild>
-									<a className="h-20" href={`/${userId}/${name}`}>
+									<a className="h-[80px]" href={`/${userId}/${name}`}>
 										<div className="flex flex-col gap-1">
 											<div className="font-bold">{name}</div>
 
