@@ -115,14 +115,15 @@ export default function Home(props) {
 				<CodeEditor onChange={onFileDataChangeHandler} defaultLanguage={fileExtension} value={fileData} />
 			</div>
 			<div className={style.linkContainer}>
-				<input onClick={() => loading || goToPage(link)} value={loading ? "Loading..." : link || "..."} readOnly={true} />
-				<div className={style.loadingIcon}>
-					<Icon enabled={uploadingStatus || loading} />
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+					}}
+				>
+					<input onClick={() => loading || goToPage(link)} value={loading ? "Loading..." : link || "..."} readOnly={true} />
+					<input onClick={() => loading || goToPage(getCdnUrl(fileName))} value={loading ? "Loading..." : getCdnUrl(fileName) || "..."} readOnly={true} />
 				</div>
-			</div>
-
-			<div className={style.linkContainer}>
-				<input onClick={() => loading || goToPage(getCdnUrl(fileName))} value={loading ? "Loading..." : getCdnUrl(fileName) || "..."} readOnly={true} />
 				<div className={style.loadingIcon}>
 					<Icon enabled={uploadingStatus || loading} />
 				</div>
