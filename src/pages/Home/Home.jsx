@@ -8,6 +8,8 @@ import Icon from "../../components/Icon/Icon";
 import { useSearchParams } from "react-router-dom";
 
 export default function Home(props) {
+	const GIT_BASE_URL = "https://github.com/R-I-S-H-A-B-H-S-I-N-G-H/serve-anything/blob/main";
+	const CDN_BASE_URL = "https://cdn.jsdelivr.net/gh/R-I-S-H-A-B-H-S-I-N-G-H/serve-anything@main";
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [link, setLink] = useState(null);
 	const [loading, setLoading] = useState(false);
@@ -23,6 +25,14 @@ export default function Home(props) {
 		const fileName = searchParams.get("file") || "";
 		if (!fileName) return "";
 		return `${fileName}.${extenion}`;
+	}
+
+	function getGitUrl(_fileName) {
+		return `${GIT_BASE_URL}/${_fileName}`;
+	}
+
+	function getCdnUrl(_fileName) {
+		return `${CDN_BASE_URL}/${_fileName}`;
 	}
 
 	function updateFileNameFromLocation(fileNameWithExt = "") {
@@ -106,6 +116,13 @@ export default function Home(props) {
 			</div>
 			<div className={style.linkContainer}>
 				<input onClick={() => loading || goToPage(link)} value={loading ? "Loading..." : link || "..."} readOnly={true} />
+				<div className={style.loadingIcon}>
+					<Icon enabled={uploadingStatus || loading} />
+				</div>
+			</div>
+
+			<div className={style.linkContainer}>
+				<input onClick={() => loading || goToPage(getCdnUrl(fileName))} value={loading ? "Loading..." : getCdnUrl(fileName) || "..."} readOnly={true} />
 				<div className={style.loadingIcon}>
 					<Icon enabled={uploadingStatus || loading} />
 				</div>
