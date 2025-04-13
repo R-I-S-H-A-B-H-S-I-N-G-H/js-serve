@@ -1,7 +1,18 @@
 import { hashString } from "@/util/crypto";
 import { signal } from "@preact/signals-react";
 
-export const fileSystemObj = signal(createNewFS());
+type FSVal = {
+	index: string;
+	isFolder: boolean;
+	children: string[];
+	data: string;
+	path?: string;
+};
+type FSObject = {
+	[key: string]: FSVal | null;
+};
+
+export const fileSystemObj = signal<FSObject>(createNewFS());
 export function createNewFS() {
 	return {
 		root: {
@@ -25,15 +36,41 @@ function getParentFolderPath(path = "") {
 
 function getFileName(path = "") {
 	const pathArr = path.split("/");
-	return pathArr.pop();
+	return pathArr.pop() ?? "";
 }
 
-export function addEnterToFs(completeFilePath = "", isFolder = true) {
-	const parentDir = getParentFolderPath(completeFilePath);
+function getParentFolderHash(absPath: string) {
+	const parentDir = getParentFolderPath(absPath);
 	const hashedParentPath = !parentDir ? "root" : hashString(parentDir);
-	const hashedChildPath = hashString(completeFilePath);
+	return hashedParentPath;
+}
 
-	const parentEntry = fileSystemObj.value[hashedParentPath];
+function getEntry(hashedPath: string): FSVal {
+	if (!fileSystemObj.value[hashedPath]) throw new Error("value not present");
+	return fileSystemObj.value[hashedPath];
+}
+
+function removeEntry(absPath: string) {
+	const hashedParentPath = getParentFolderHash(absPath);
+	const hashedChildPath = hashString(absPath);
+
+	const parentEntry = getEntry(hashedParentPath);
+
+	if (parentEntry == null) throw new Error("Doesnot have a parent");
+	parentEntry.children = parentEntry.children.filter((ele) => ele != hashedChildPath);
+
+	delete fileSystemObj.value[hashedChildPath];
+	fileSystemObj.value = {
+		...fileSystemObj.value,
+		[hashedParentPath]: parentEntry,
+	};
+}
+
+export function addEntryToFs(absPath: string = "", isFolder: boolean = true) {
+	const hashedParentPath = getParentFolderHash(absPath);
+	const hashedChildPath = hashString(absPath);
+
+	const parentEntry = getEntry(hashedParentPath);
 
 	if (parentEntry == null) throw new Error("Doesnot have a parent");
 	parentEntry.children = [...new Set([...parentEntry.children, hashedChildPath])];
@@ -45,9 +82,39 @@ export function addEnterToFs(completeFilePath = "", isFolder = true) {
 			index: hashedChildPath,
 			isFolder,
 			children: [],
-			data: getFileName(completeFilePath),
-			path: completeFilePath,
+			data: getFileName(absPath),
+			path: absPath,
 		},
+	};
+}
+
+export function renameFsEntry(absPath: string, newName: string) {
+	const newFileAbsPath = getParentFolderPath(absPath) + "/" + newName;
+
+	copyFsEntry(absPath, newFileAbsPath);
+	removeEntry(absPath);
+}
+
+export function copyFsEntry(fromAbsPath: string, toAbsPath: string) {
+	const fromEntry = getEntry(hashString(fromAbsPath));
+	const toPathHash = hashString(toAbsPath);
+	const toEntry = {
+		...fromEntry,
+		index: toPathHash,
+		data: getFileName(toAbsPath),
+		path: toAbsPath,
+	};
+
+	const toParentHash = getParentFolderHash(toAbsPath);
+	const toParentEntry = getEntry(toParentHash);
+	if (!toParentEntry) throw new Error("Invalid Path parent not present");
+
+	// adding the cpoied child to its parent
+	toParentEntry.children = [...new Set([...toParentEntry.children, toPathHash])];
+	fileSystemObj.value = {
+		...fileSystemObj.value,
+		[toParentHash]: toParentEntry,
+		[toPathHash]: toEntry,
 	};
 }
 

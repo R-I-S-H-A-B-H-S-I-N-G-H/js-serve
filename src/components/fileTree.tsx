@@ -1,22 +1,22 @@
 import { Tree, UncontrolledTreeEnvironment, StaticTreeDataProvider } from "react-complex-tree";
 import "react-complex-tree/lib/style-modern.css";
 
-function FileTree({ items }) {
+function FileTree({ items, onFocusItem = () => {}, onRenameItem }) {
 	const dataProvider = new StaticTreeDataProvider(items, (item, newName) => ({ ...item, data: newName }));
 
 	return (
 		<UncontrolledTreeEnvironment
-			onFocusItem={(ele) => {
-				console.log(ele);
-			}}
+			onRenameItem={onRenameItem}
+			onFocusItem={onFocusItem}
 			dataProvider={dataProvider}
 			getItemTitle={(item) => item.data}
 			viewState={{}}
-			canDragAndDrop={true}
-			canDropOnFolder={true}
-			canReorderItems={true}
+			canDragAndDrop={false}
+			canDropOnFolder={false}
+			canReorderItems={false}
+			canSearch={false}
 		>
-			<Tree treeId="s" rootItem="root" treeLabel="Tree Example" />
+			<Tree treeId="s" rootItem="root" treeLabel="" />
 		</UncontrolledTreeEnvironment>
 	);
 }
