@@ -1,27 +1,22 @@
-import { hashString } from "@/util/crypto";
+import { TreeNode } from "@/components/fileTree";
 import { signal } from "@preact/signals-react";
 
-type FSVal = {
-	index: string;
-	isFolder: boolean;
-	children: string[];
-	data: string;
-	path?: string;
-};
-type FSObject = {
-	[key: string]: FSVal | null;
-};
-
-export const fileSystemObj = signal<FSObject>(createNewFS());
+export const fileSystemObj = signal<TreeNode[]>(createNewFS());
 export function createNewFS() {
-	return {
-		root: {
-			index: "root",
-			isFolder: true,
-			children: [],
-			data: "Root",
+	return [
+		{
+			id: "src",
+			name: "src",
+			children: [
+				{ id: "app", name: "App.tsx" },
+				{
+					id: "components",
+					name: "components",
+					children: [{ id: "header", name: "Header.tsx" }],
+				},
+			],
 		},
-	};
+	];
 }
 
 function resetFS() {
@@ -39,86 +34,74 @@ export function getFileName(path = "") {
 	return pathArr.pop() ?? "";
 }
 
-function getParentFolderHash(absPath: string) {
-	const parentDir = getParentFolderPath(absPath);
-	const hashedParentPath = !parentDir ? "root" : hashString(parentDir);
-	return hashedParentPath;
+export function getEntry(absPath: string, fs = fileSystemObj.peek()): TreeNode | null {
+	let absPathArr = absPath.split("/").filter((ele) => ele);
+	const currentEle = absPathArr.shift();
+
+	for (const node of fs) {
+		const curNodeId = node.id;
+		if (curNodeId != currentEle) continue;
+		if (absPathArr.length == 0) return node;
+		return getEntry(absPathArr.join("/"), node.children);
+	}
+
+	return null;
 }
 
-function getEntry(hashedPath: string): FSVal {
-	if (!fileSystemObj.value[hashedPath]) throw new Error("value not present");
-	return fileSystemObj.value[hashedPath];
+function removeEntryFromTree(parentPath: string, targetId: string, fs = fileSystemObj.peek()): TreeNode[] | null {
+	if (parentPath === "") {
+		return fs.filter((node) => node.id !== targetId);
+	}
+
+	const parent = getEntry(parentPath, fs);
+	if (!parent || !parent.children) return null;
+
+	parent.children = parent.children.filter((child) => child.id !== targetId);
+	return fs;
 }
 
-function removeEntry(absPath: string) {
-	const hashedParentPath = getParentFolderHash(absPath);
-	const hashedChildPath = hashString(absPath);
+export function removeEntry(absPath: string) {
+	const parentPath = getParentFolderPath(absPath);
+	const childId = getFileName(absPath);
 
-	const parentEntry = getEntry(hashedParentPath);
-
-	if (parentEntry == null) throw new Error("Doesnot have a parent");
-	parentEntry.children = parentEntry.children.filter((ele) => ele != hashedChildPath);
-
-	delete fileSystemObj.value[hashedChildPath];
-	fileSystemObj.value = {
-		...fileSystemObj.value,
-		[hashedParentPath]: parentEntry,
-	};
+	const updatedFS = removeEntryFromTree(parentPath, childId);
+	if (updatedFS) {
+		updateFS(updatedFS);
+	}
 }
 
 export function addEntryToFs(absPath: string = "", isFolder: boolean = true) {
-	const hashedParentPath = getParentFolderHash(absPath);
-	const hashedChildPath = hashString(absPath);
+	if (!absPath) return;
 
-	const parentEntry = getEntry(hashedParentPath);
+	const name = getFileName(absPath);
+	const parentPath = getParentFolderPath(absPath);
 
-	if (parentEntry == null) throw new Error("Doesnot have a parent");
-	parentEntry.children = [...new Set([...parentEntry.children, hashedChildPath])];
+	const fsCopy = fileSystemObj.peek();
 
-	fileSystemObj.value = {
-		...fileSystemObj.value,
-		[hashedParentPath]: parentEntry,
-		[hashedChildPath]: {
-			index: hashedChildPath,
-			isFolder,
-			children: [],
-			data: getFileName(absPath),
-			path: absPath,
-		},
-	};
+	const parent = getEntry(parentPath, fsCopy);
+	if (!parent || !parent.children) return;
+
+	const exists = parent.children.find((child) => child.id === name);
+	if (exists) return; // Prevent duplicate
+
+	const newEntry: TreeNode = isFolder ? { id: name, name, children: [] } : { id: name, name };
+
+	parent.children.push(newEntry);
+	updateFS(fsCopy);
+}
+
+function updateFS(val: TreeNode[]) {
+	fileSystemObj.value = [...val];
 }
 
 export function renameFsEntry(absPath: string, newName: string) {
-	const newFileAbsPath = getParentFolderPath(absPath) + "/" + newName;
-
-	copyFsEntry(absPath, newFileAbsPath);
+	const oldEntry = getEntry(absPath);
 	removeEntry(absPath);
-
-	console.log("rename");
+	const newEntryPath = getParentFolderPath(absPath) + "/" + newName;
+	addEntryToFs(newEntryPath, !!oldEntry?.children);
 }
 
-export function copyFsEntry(fromAbsPath: string, toAbsPath: string) {
-	const fromEntry = getEntry(hashString(fromAbsPath));
-	const toPathHash = hashString(toAbsPath);
-	const toEntry = {
-		...fromEntry,
-		index: toPathHash,
-		data: getFileName(toAbsPath),
-		path: toAbsPath,
-	};
-
-	const toParentHash = getParentFolderHash(toAbsPath);
-	const toParentEntry = getEntry(toParentHash);
-	if (!toParentEntry) throw new Error("Invalid Path parent not present");
-
-	// adding the cpoied child to its parent
-	toParentEntry.children = [...new Set([...toParentEntry.children, toPathHash])];
-	fileSystemObj.value = {
-		...fileSystemObj.value,
-		[toParentHash]: toParentEntry,
-		[toPathHash]: toEntry,
-	};
-}
+export function copyFsEntry(fromAbsPath: string, toAbsPath: string) {}
 
 export function getFS() {
 	return fileSystemObj.value;

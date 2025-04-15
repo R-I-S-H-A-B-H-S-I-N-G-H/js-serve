@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import FileTree from "./components/fileTree";
-import { addEntryToFs, fileSystemObj, getFileName, getFS, renameFsEntry } from "./store/fileStore";
+import { addEntryToFs, fileSystemObj, getEntry, getFileName, getFS, removeEntry, renameFsEntry } from "./store/fileStore";
 import CodeEditor from "./components/codeEditor";
 import FilePathInput from "./components/filePathInput";
 import EditorBar from "./components/editorBar";
 
 function App() {
 	const [fileSystem, setFileSystem] = useState(getFS());
-	const [selectedFile, setSelectedFile] = useState(null);
+	const [selectedFile, setSelectedFile] = useState([]);
 	useEffect(() => {
 		fileSystemObj.subscribe(setFileSystem);
-		addNewFile("/folder");
-		addNewFile("/folder/file.js", false);
+
+		setTimeout(() => {
+			addEntryToFs("/src/test");
+		}, 1000 * 1);
+
+		setTimeout(() => {
+			renameFsEntry("/src/test", "test1.js");
+		}, 1000 * 2);
 	}, []);
 
 	function addNewFile(filepath: string, isFolder = true) {
@@ -34,7 +40,7 @@ function App() {
 	return (
 		<div className="flex ">
 			<div className=" h-dvh w-50">
-				<FileTree onFocusItem={onFocusItem} items={fileSystem} onRenameItem={renameFs} />
+				<FileTree onFocusItem={onFocusItem} data={fileSystem} onRenameItem={renameFs} />
 			</div>
 			<div className="flex-1 m-0.5">
 				<div>
@@ -47,7 +53,15 @@ function App() {
 							});
 						}}
 					/> */}
-					<EditorBar />
+					{/* <EditorBar
+						filepath={selectedFile?.path}
+						onFilePathChange={(val) => {
+							renameFsEntry(selectedFile?.path, getFileName(val));
+							setSelectedFile({
+								path: val,
+							});
+						}}
+					/> */}
 				</div>
 				<CodeEditor language="js" value="" onChange={(v) => {}} />
 			</div>

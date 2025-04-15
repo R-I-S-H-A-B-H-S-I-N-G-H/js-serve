@@ -1,9 +1,14 @@
 import FilePathInput from "./filePathInput";
 
-export default function EditorBar() {
+interface EditorBarProps {
+	filepath: string;
+	onFilePathChange: (newFilePath: string) => void;
+}
+
+export default function EditorBar({ filepath, onFilePathChange }: EditorBarProps) {
 	return (
 		<div className="h-10 px-1 py-0.5 border-2 border-gray-400 rounded-t-sm flex items-center justify-between">
-			<FilePathInput />
+			<FilePathInput filepath={filepath} onChange={onFilePathChange} />
 			<div className="flex items-center gap-1 border-2 border-gray-400 rounded-sm px-1">
 				<Button label="Raw" />
 				<Divider />
