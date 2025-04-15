@@ -7,7 +7,7 @@ export type TreeNode = {
 	children?: TreeNode[];
 };
 
-export default function FileTree({ onFocusItem = () => {}, data = [] }) {
+export default function FileTree({ data, onFocusItem = (e: any) => {} }: { data: TreeNode[]; onFocusItem?: (e: any) => void }) {
 	return (
 		<div className="bg-white dark:bg-[#0d1117] text-[#24292f] dark:text-[#c9d1d9] p-3  border-gray-500 dark:border-gray-700 font-mono text-sm w-full h-full">
 			<Tree

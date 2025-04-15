@@ -12,7 +12,7 @@ export default function FilePathInput({ filepath = "", onChange = (val: string) 
 		return filesArr.pop();
 	}
 
-	function onChangeHandler(fileName) {
+	function onChangeHandler(fileName: string) {
 		const absPath = getFolders() + "/" + fileName;
 		onChange(absPath);
 	}

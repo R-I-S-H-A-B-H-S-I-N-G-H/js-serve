@@ -32,7 +32,7 @@ function App() {
 		renameFsEntry(ele.path, renamedName);
 	}
 
-	function onFocusItem(ele) {
+	function onFocusItem(ele: any) {
 		const { path } = ele;
 		setSelectedFile(ele);
 	}
@@ -40,7 +40,7 @@ function App() {
 	return (
 		<div className="flex ">
 			<div className=" h-dvh w-50">
-				<FileTree onFocusItem={onFocusItem} data={fileSystem} onRenameItem={renameFs} />
+				<FileTree onFocusItem={onFocusItem} data={fileSystem} />
 			</div>
 			<div className="flex-1 m-0.5">
 				<div>
