@@ -28,13 +28,13 @@ function resetFS() {
 	fileSystemObj.value = createNewFS();
 }
 
-function getParentFolderPath(path = "") {
+export function getParentFolderPath(path = "") {
 	const pathArr = path.split("/");
 	pathArr.pop();
 	return pathArr.join("/");
 }
 
-function getFileName(path = "") {
+export function getFileName(path = "") {
 	const pathArr = path.split("/");
 	return pathArr.pop() ?? "";
 }
@@ -93,6 +93,8 @@ export function renameFsEntry(absPath: string, newName: string) {
 
 	copyFsEntry(absPath, newFileAbsPath);
 	removeEntry(absPath);
+
+	console.log("rename");
 }
 
 export function copyFsEntry(fromAbsPath: string, toAbsPath: string) {
