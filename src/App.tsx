@@ -4,6 +4,7 @@ import FileTree from "./components/fileTree";
 import { addEntryToFs, fileSystemObj, getFileName, getFS, renameFsEntry } from "./store/fileStore";
 import CodeEditor from "./components/codeEditor";
 import FilePathInput from "./components/filePathInput";
+import EditorBar from "./components/editorBar";
 
 function App() {
 	const [fileSystem, setFileSystem] = useState(getFS());
@@ -35,16 +36,19 @@ function App() {
 			<div className=" h-dvh w-50">
 				<FileTree onFocusItem={onFocusItem} items={fileSystem} onRenameItem={renameFs} />
 			</div>
-			<div className="flex-1">
-				<FilePathInput
-					filepath={selectedFile?.path}
-					onChange={(val) => {
-						renameFsEntry(selectedFile?.path, getFileName(val));
-						setSelectedFile({
-							path: val,
-						});
-					}}
-				/>
+			<div className="flex-1 m-0.5">
+				<div>
+					{/* <FilePathInput
+						filepath={selectedFile?.path}
+						onChange={(val) => {
+							renameFsEntry(selectedFile?.path, getFileName(val));
+							setSelectedFile({
+								path: val,
+							});
+						}}
+					/> */}
+					<EditorBar />
+				</div>
 				<CodeEditor language="js" value="" onChange={(v) => {}} />
 			</div>
 		</div>
