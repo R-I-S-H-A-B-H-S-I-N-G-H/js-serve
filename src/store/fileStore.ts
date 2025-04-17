@@ -6,8 +6,6 @@ import { signal } from "@preact/signals-react";
 export const fileSystemObj = signal<TreeNode[]>([]);
 let lastUpdatedHash = "";
 export function createNewFS(userId: string) {
-	console.log("creatig new fs");
-
 	const nwFsObj = [
 		{
 			id: userId,
@@ -119,7 +117,6 @@ export function getBackUpPayload(): string {
 
 export function restoreBackUp(backup: string) {
 	const backupObj = JSON.parse(backup);
-	console.log(backupObj);
 
 	if (!backupObj || Object.keys(backupObj).length == 0) {
 		createNewFS(getUserId());
@@ -127,5 +124,5 @@ export function restoreBackUp(backup: string) {
 	}
 
 	updateFS(backupObj);
-	updateHash()
+	updateHash();
 }

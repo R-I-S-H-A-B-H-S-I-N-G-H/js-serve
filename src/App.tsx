@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import FileTree from "./components/fileTree";
-import { addEntryToFs, createNewFS, fileSystemObj, getBackUpPayload, getEntry, getFileName, getFS, isFsOld, removeEntry, renameFsEntry, restoreBackUp, updateHash } from "./store/fileStore";
+import { addEntryToFs, createNewFS, fileSystemObj, getBackUpPayload, getFS, isFsOld, restoreBackUp, updateHash } from "./store/fileStore";
 import CodeEditor from "./components/codeEditor";
-import FilePathInput from "./components/filePathInput";
-import EditorBar from "./components/editorBar";
 import { getUserId } from "./util/userUtil";
-import { getFileData, getIndexFile, updateIndexFile, upload } from "./util/s3Utils/s3Utils";
+import { getResourcePath, getFileData, getIndexFile, updateIndexFile, upload } from "./util/s3Utils/s3Utils";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
-import { useSignal } from "@preact/signals-react";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 function App() {
 	const [fileSystem, setFileSystem] = useState(getFS());
@@ -24,7 +23,6 @@ function App() {
 	}, []);
 
 	useEffect(() => {
-		console.log(pathVal);
 		getFileData(pathVal)
 			.then((data) => {
 				setFileContent(data ?? "");
@@ -63,9 +61,7 @@ function App() {
 	}
 
 	function onFocusItem(ele: any) {
-		const { path } = ele;
 		const curPath = generatePath(ele);
-		console.log(curPath);
 		setPathVal(curPath);
 	}
 
@@ -83,7 +79,6 @@ function App() {
 
 		backUpFs();
 		updateHash();
-		console.log(isFsOld());
 
 		// updatig file
 
@@ -94,6 +89,27 @@ function App() {
 		let fileName = e.target.value;
 		if (!fileName.startsWith("/")) fileName = "/" + fileName;
 		setPathVal(fileName);
+	}
+
+	function successToast({ message }: { message: string }) {
+		toast.success(message);
+	}
+
+	function errorToast({ message }: { message: string }) {
+		toast.error(message);
+	}
+
+	function copyToClipBoard(type: "CDN" | "S3") {
+		const textToCopy = getResourcePath(pathVal, type);
+
+		navigator.clipboard
+			.writeText(textToCopy)
+			.then(() => {
+				successToast({ message: `${type} path copied to ClipBoard` });
+			})
+			.catch((err) => {
+				successToast({ message: `Error in coping ${type} path to ClipBoard` });
+			});
 	}
 
 	return (
@@ -107,8 +123,14 @@ function App() {
 					<Button onClick={() => createMultipleFiles(pathVal, false)} variant={"secondary"}>
 						{fileContent ? "update" : "create"}
 					</Button>
-					<Button variant={"outline"}>S3</Button>
-					<Button variant={"outline"}>CDN</Button>
+					<Button onClick={() => copyToClipBoard("S3")} variant={"outline"}>
+						S3
+						<Copy />
+					</Button>
+					<Button onClick={() => copyToClipBoard("CDN")} variant={"outline"}>
+						CDN
+						<Copy />
+					</Button>
 				</div>
 				<CodeEditor language="js" value={fileContent} onChange={setFileContent} />
 			</div>
