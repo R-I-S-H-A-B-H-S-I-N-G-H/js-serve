@@ -120,26 +120,32 @@ function App() {
 	}
 
 	return (
-		<div className="flex ">
-			<div className=" h-dvh w-50">
+		<div className="flex h-dvh">
+			{/* Sidebar */}
+			<div className="w-64 border-r border-gray-200">
 				<FileTree onFocusItem={onFocusItem} data={fileSystem} />
 			</div>
-			<div className="flex-1 m-0.5">
-				<div className="flex gap-1">
-					<Input onChange={updateFileNameInputHandler} value={pathVal} />
-					<Button onClick={() => createMultipleFiles(pathVal, false)} variant={"secondary"}>
+
+			{/* Main Content */}
+			<div className="flex-1 p-2 flex flex-col overflow-hidden">
+				{/* Top Bar */}
+				<div className="flex gap-2 items-center mb-2">
+					<Input onChange={updateFileNameInputHandler} value={pathVal} className="flex-1" />
+					<Button onClick={() => createMultipleFiles(pathVal, false)} variant="secondary">
 						{fileContent ? "update" : "create"}
 					</Button>
-					<Button onClick={() => copyToClipBoard("S3")} variant={"outline"}>
-						S3
-						<Copy />
+					<Button onClick={() => copyToClipBoard("S3")} variant="outline">
+						S3 <Copy className="ml-1 w-4 h-4" />
 					</Button>
-					<Button onClick={() => copyToClipBoard("CDN")} variant={"outline"}>
-						CDN
-						<Copy />
+					<Button onClick={() => copyToClipBoard("CDN")} variant="outline">
+						CDN <Copy className="ml-1 w-4 h-4" />
 					</Button>
 				</div>
-				<CodeEditor language="js" value={fileContent} onChange={setFileContent} />
+
+				{/* Code Editor */}
+				<div className="flex-1 overflow-auto">
+					<CodeEditor language="js" value={fileContent} onChange={setFileContent} />
+				</div>
 			</div>
 		</div>
 	);
