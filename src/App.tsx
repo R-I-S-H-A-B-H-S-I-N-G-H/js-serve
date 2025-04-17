@@ -122,7 +122,7 @@ function App() {
 	return (
 		<div className="flex h-dvh">
 			{/* Sidebar */}
-			<div className="w-64 border-r border-gray-200">
+			<div className="min-w-44 w-[20%] max-w-64 border-r border-gray-200">
 				<FileTree onFocusItem={onFocusItem} data={fileSystem} />
 			</div>
 
