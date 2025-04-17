@@ -38,7 +38,6 @@ export function getFileUrl(fileName: string) {
 export async function getFileData(fileName: string) {
 	const url = getFileUrl(fileName);
 
-	console.log(url);
 	if (!url) return;
 	const resp = await axios.get(url);
 	const jsonResp = await resp.data;

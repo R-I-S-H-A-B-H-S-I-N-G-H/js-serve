@@ -99,7 +99,16 @@ function App() {
 		toast.error(message);
 	}
 
+	function warnToast({ message }: { message: string }) {
+		toast.warning(message);
+	}
+
 	function copyToClipBoard(type: "CDN" | "S3") {
+		if (!pathVal) {
+			warnToast({ message: `Select a file to copy its path` });
+			return;
+		}
+
 		const textToCopy = getResourcePath(pathVal, type);
 
 		navigator.clipboard
@@ -108,7 +117,7 @@ function App() {
 				successToast({ message: `${type} path copied to ClipBoard` });
 			})
 			.catch((err) => {
-				successToast({ message: `Error in coping ${type} path to ClipBoard` });
+				errorToast({ message: `Error in coping ${type} path to ClipBoard` });
 			});
 	}
 
