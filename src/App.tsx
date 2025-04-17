@@ -76,12 +76,10 @@ function App() {
 		});
 
 		// updating the backup
-
 		backUpFs();
 		updateHash();
 
 		// updatig file
-
 		upload({ fileName: pathVal, fileBody: fileContent });
 	}
 
