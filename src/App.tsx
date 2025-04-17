@@ -130,6 +130,7 @@ function App() {
 			<div className="flex-1 p-2 flex flex-col overflow-hidden">
 				{/* Top Bar */}
 				<div className="flex gap-2 items-center mb-2">
+					<span className="text-2xl font-bold text-blue-400 mr-4">JsServe</span>
 					<Input onChange={updateFileNameInputHandler} value={pathVal} className="flex-1" />
 					<Button onClick={() => createMultipleFiles(pathVal, false)} variant="secondary">
 						{fileContent ? "update" : "create"}
