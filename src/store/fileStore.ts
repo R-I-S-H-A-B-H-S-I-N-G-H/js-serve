@@ -1,26 +1,30 @@
 import { TreeNode } from "@/components/fileTree";
+import { hashString } from "@/util/crypto";
+import { getUserId } from "@/util/userUtil";
 import { signal } from "@preact/signals-react";
 
-export const fileSystemObj = signal<TreeNode[]>(createNewFS());
-export function createNewFS() {
-	return [
+export const fileSystemObj = signal<TreeNode[]>([]);
+let lastUpdatedHash = "";
+export function createNewFS(userId: string) {
+	console.log("creatig new fs");
+
+	const nwFsObj = [
 		{
-			id: "src",
-			name: "src",
-			children: [
-				{ id: "app", name: "App.tsx" },
-				{
-					id: "components",
-					name: "components",
-					children: [{ id: "header", name: "Header.tsx" }],
-				},
-			],
+			id: userId,
+			name: userId,
+			children: [],
 		},
 	];
+	updateFS(nwFsObj);
+	updateHash();
 }
 
-function resetFS() {
-	fileSystemObj.value = createNewFS();
+export function updateHash() {
+	lastUpdatedHash = hashString(JSON.stringify(fileSystemObj.peek()));
+}
+
+export function isFsOld() {
+	return lastUpdatedHash == hashString(JSON.stringify(fileSystemObj.peek()));
 }
 
 export function getParentFolderPath(path = "") {
@@ -105,4 +109,23 @@ export function copyFsEntry(fromAbsPath: string, toAbsPath: string) {}
 
 export function getFS() {
 	return fileSystemObj.value;
+}
+
+export function getBackUpPayload(): string {
+	const backupObj = fileSystemObj ?? {};
+
+	return JSON.stringify(backupObj);
+}
+
+export function restoreBackUp(backup: string) {
+	const backupObj = JSON.parse(backup);
+	console.log(backupObj);
+
+	if (!backupObj || Object.keys(backupObj).length == 0) {
+		createNewFS(getUserId());
+		return;
+	}
+
+	updateFS(backupObj);
+	updateHash()
 }
