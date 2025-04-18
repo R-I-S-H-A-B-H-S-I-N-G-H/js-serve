@@ -11,7 +11,7 @@ export function getAbsDataFilePath(filePath: string) {
 }
 
 export function getAbsIndexFilePath(userId: string) {
-	return `${USER_DATA_BASE}/${userId}.json`;
+	return `${INDEX_FILE_BASE}/${userId}.json`;
 }
 
 export function getResourcePath(filepath: string, type: "CDN" | "S3" = "CDN") {
