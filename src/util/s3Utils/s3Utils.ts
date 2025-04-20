@@ -3,8 +3,8 @@ const S3_BASE_URL = `${API_BASE_URL}/s3`;
 import axios from "axios";
 import { getUserId } from "../userUtil";
 
-const INDEX_FILE_BASE = `index`;
-const USER_DATA_BASE = `userdata`;
+const INDEX_FILE_BASE = `user/index`;
+const USER_DATA_BASE = `user/data`;
 
 export function getAbsDataFilePath(filePath: string) {
 	return `${USER_DATA_BASE}/${getUserId()}${filePath}`;
