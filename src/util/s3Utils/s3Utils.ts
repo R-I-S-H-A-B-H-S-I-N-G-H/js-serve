@@ -1,10 +1,14 @@
-import { API_BASE_URL, BASE_CDN_URL, BASE_S3_URL } from "../../../config/config";
+import { API_BASE_URL, BASE_CDN_URL, BASE_S3_URL, LAMBDA_API_URL } from "../../../config/config";
 const S3_BASE_URL = `${API_BASE_URL}/s3`;
 import axios from "axios";
 import { getUserId } from "../userUtil";
 
 const INDEX_FILE_BASE = `user/index`;
 const USER_DATA_BASE = `user/data`;
+
+export function getApiUrl(methodName?: string): string {
+	return API_BASE_URL;
+}
 
 export function getAbsDataFilePath(filePath: string) {
 	return `${USER_DATA_BASE}/${getUserId()}${filePath}`;
@@ -21,7 +25,7 @@ export function getResourcePath(filepath: string, type: "CDN" | "S3" = "CDN") {
 
 export async function upload(props: { fileName: string; fileBody: string }) {
 	const { fileBody, fileName } = props;
-	const S3_SERVICE_URL = `${S3_BASE_URL}/uptos3`;
+	const S3_SERVICE_URL = `${getApiUrl()}`;
 	const resp = await axios.post(S3_SERVICE_URL, {
 		filePath: getAbsDataFilePath(fileName),
 		fileData: fileBody,
@@ -55,7 +59,7 @@ export async function getIndexFile() {
 export async function updateIndexFile(fileData: string) {
 	const userId = getUserId();
 
-	const S3_SERVICE_URL = `${S3_BASE_URL}/uptos3`;
+	const S3_SERVICE_URL = `${getApiUrl()}`;
 	const resp = await axios.post(S3_SERVICE_URL, {
 		filePath: getAbsIndexFilePath(userId),
 		fileData: fileData,
