@@ -65,7 +65,7 @@ function App() {
 		setPathVal(curPath);
 	}
 
-	function createMultipleFiles(filePath = "", _isFolder = true) {
+	async function createMultipleFiles(filePath = "", _isFolder = true) {
 		let curpath = "";
 		const pathArr = filePath.split("/").filter((ele) => ele);
 
@@ -79,8 +79,13 @@ function App() {
 		backUpFs();
 		updateHash();
 
-		// updatig file
-		upload({ fileName: pathVal, fileBody: fileContent });
+		try {
+			// updatig file
+			await upload({ fileName: pathVal, fileBody: fileContent });
+			successToast({ message: `File ${filePath} created successfully` });
+		} catch (error) {
+			errorToast({ message: `Error in creating file ${filePath}` });
+		}
 	}
 
 	function updateFileNameInputHandler(e: any) {
@@ -132,13 +137,13 @@ function App() {
 				<div className="flex gap-2 items-center mb-2">
 					<span className="text-2xl font-bold text-blue-400 mr-4">JsServe</span>
 					<Input onChange={updateFileNameInputHandler} value={pathVal} className="flex-1" />
-					<Button onClick={() => createMultipleFiles(pathVal, false)} variant="secondary">
+					<Button onClick={() => createMultipleFiles(pathVal, false)} disabled={false} variant="outline">
 						{fileContent ? "update" : "create"}
 					</Button>
 					<Button onClick={() => copyToClipBoard("S3")} variant="outline">
 						S3 <Copy className="ml-1 w-4 h-4" />
 					</Button>
-					<Button onClick={() => copyToClipBoard("CDN")} variant="outline">
+					<Button onClick={() => copyToClipBoard("CDN")} disabled variant="outline">
 						CDN <Copy className="ml-1 w-4 h-4" />
 					</Button>
 				</div>
