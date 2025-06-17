@@ -81,7 +81,9 @@ function App() {
 
 		try {
 			// updatig file
+			infoToast({ message: `Creating file ${filePath}` });
 			await upload({ fileName: pathVal, fileBody: fileContent });
+			console.log("File created successfully", pathVal);
 			successToast({ message: `File ${filePath} created successfully` });
 		} catch (error) {
 			errorToast({ message: `Error in creating file ${filePath}` });
@@ -96,6 +98,10 @@ function App() {
 
 	function successToast({ message }: { message: string }) {
 		toast.success(message);
+	}
+
+	function infoToast({ message }: { message: string }) {
+		toast.info(message);
 	}
 
 	function errorToast({ message }: { message: string }) {
